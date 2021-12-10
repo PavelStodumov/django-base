@@ -13,15 +13,13 @@
 	<div class="container">
 		<div class="hero-white">
 			<div class="header clearfix">
-				<a href="index.html" class="logo"></a>
+				<a href="{% url 'index' %}" class="logo"></a>
 				<ul class="menu">
-					<li><a href="/">домой</a></li>
-					<li><a href="/products" class="active">продукты</a></li>
-					<li><a href="/contact">контакты</a></li>
-
+					<li><a href="{% url 'index' %}">домой</a></li>
+					<li><a href="{% url 'products' %}" class="active">продукты</a></li>
+					<li><a href="{% url 'contact' %}">контакты</a></li>
 				</ul>
 				<a href="#" class="search"></a>
-				<a href="#" class="basket"></a>
 			</div>
 		</div>
 
