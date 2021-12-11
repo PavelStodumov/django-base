@@ -24,7 +24,9 @@ content = {
         {'img': "/static/img/product-21.jpg"},
         {'img': "/static/img/product-31.jpg"}
     ],
-    'products': Product.objects.all()[:]
+    'products': Product.objects.all()[:],
+    # не придумал как сделать категорию, объединяющую все категории.
+    'product_categories': [{'name': 'все'}, *ProductCategory.objects.all()[2:]],
 }
 
 
