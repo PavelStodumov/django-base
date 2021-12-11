@@ -1,8 +1,9 @@
 from django.shortcuts import render
+from .models import ProductCategory, Product
 
 # Create your views here.
 
-
+# контент у меня получается общий для всего сайта. Наверное это не очень хорошо
 content = {
     'product_title': 'продукты',
     'main_title': 'магазин',
@@ -22,7 +23,8 @@ content = {
         {'img': "/static/img/product-11.jpg"},
         {'img': "/static/img/product-21.jpg"},
         {'img': "/static/img/product-31.jpg"}
-    ]
+    ],
+    'products': Product.objects.all()[:]
 }
 
 
