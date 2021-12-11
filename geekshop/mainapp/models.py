@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
+from django.db.models.fields.related import ForeignKey
 
 # Create your models here.
 
@@ -9,3 +11,28 @@ class ProductCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Product(models.Model):
+    category = models.ForeignKey(
+        ProductCategory, on_delete=models.SET_NULL, null=True)
+    name = models.CharField(verbose_name='имя продукта', max_length=128)
+    image = models.ImageField(upload_to='products_images', blank=True)
+    short_desc = models.CharField(
+        verbose_name='краткое описание продукта',
+        max_length=64,
+        blank=True)
+    description = models.TextField(
+        verbose_name='описание продукта',
+        blank=True)
+    price = models.DecimalField(
+        verbose_name='цена продукта',
+        max_digits=6,
+        decimal_places=2,
+        default=0)
+    quantity = models.PositiveIntegerField(
+        verbose_name='количество продукта',
+        default=0)
+
+    def __str__(self):
+        return f'{self.name} ({self.category.name})'
