@@ -15,19 +15,19 @@
         <div class="links clearfix">
             {% include 'mainapp/includes/inc_categories_menu.html' %}
         </div>
-
+        
         <div class="details-products">
             <div class="details-slider">
                 <div class="slider-control">
-
+                    
                     {% for product in products %}
                         <div class="slider-control">
                             <a href="#"><img src="/media/{{ product.image }}" alt="">
 								<div class="text"></div>
 							</a>
-                            {{prod.image}}
+                            {{ product.name }}
                             {{selected_category}}
-                            {{selected_category.id}}
+                            {{product.category.name}}
 						</div>
                     {% endfor %}
 
