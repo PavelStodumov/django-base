@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from .models import ProductCategory, Product
 
 # Create your views here.
@@ -6,7 +6,6 @@ from .models import ProductCategory, Product
 # контент у меня получается общий для всего сайта. Наверное это не очень хорошо
 content = {
     'product_title': 'продукты',
-    'main_title': 'магазин',
     'links_menu': [
         {'href': 'products_all', 'name': 'все'},
         {'href': 'products_home', 'name': 'дом'},
@@ -16,7 +15,7 @@ content = {
     ],
     'main_menu': [
         {'href': 'index', 'name': 'домой'},
-        {'href': 'products:index', 'name': 'продукты'},
+        {'href': 'products', 'name': 'продукты'},
         {'href': 'contact', 'name': 'контакты'},
     ],
     'same_products': [
@@ -31,6 +30,14 @@ content = {
 
 
 def index(request):
+    content = {
+        'title': 'главная',
+        'main_menu': [
+            {'href': 'index', 'name': 'домой'},
+            {'href': 'products', 'name': 'продукты'},
+            {'href': 'contact', 'name': 'контакты'}, ],
+        'products': Product.objects.all()[:2]
+    }
     return render(request, 'mainapp/index.html', content)
 
 
@@ -39,6 +46,20 @@ def contact(request):
 
 
 def products(request, pk=None):
-    print(pk)
-    if pk == '':
-        return render(request, 'mainapp/products.html', content)
+
+    selected_category = ProductCategory.objects.filter(id=pk)
+    categories = ProductCategory.objects.all()
+    products = [Product.objects.filter(category=selected_category)]
+    content = {
+        'title': 'Продукты',
+        'main_menu': [
+            {'href': 'index', 'name': 'домой'},
+            {'href': 'products', 'name': 'продукты'},
+            {'href': 'contact', 'name': 'контакты'}, ],
+        'product_categories': categories,
+        'products': products,
+        'selected_category': selected_category
+    }
+    if pk:
+        return render(request, 'mainapp/category.html', content)
+    return render(request, 'mainapp/products.html', content)

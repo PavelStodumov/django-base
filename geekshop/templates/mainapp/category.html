@@ -1,17 +1,40 @@
 {% extends 'mainapp/base.html' %}
 {% load static %}
 
-{% block title %}{{main_title | title}}{% endblock title %}
+{% block title %}{{ title | title }}{% endblock title %}
+
 
 {% block menu %}
-	<div class="slider">
-	{% include 'mainapp/includes/inc_menu.html' %}
+		<div class="hero-white">
+			{% include 'mainapp/includes/inc_menu.html' %}
+		</div>
 {% endblock menu %}
 
 {% block content %}
-<div class="details">
-    <div class="links clearfix">
-        {% include 'mainapp/includes/inc_categories_menu.html' %}
+    <div class="details">
+        <div class="links clearfix">
+            {% include 'mainapp/includes/inc_categories_menu.html' %}
+        </div>
+
+        <div class="details-products">
+            <div class="details-slider">
+                <div class="slider-control">
+
+                    {% for product in products %}
+                        <div class="slider-control">
+                            <a href="#"><img src="/media/{{ product.image }}" alt="">
+								<div class="text"></div>
+							</a>
+                            {{prod.image}}
+                            {{selected_category}}
+                            {{selected_category.id}}
+						</div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
     </div>
-{% endblock %}
-</div>
+                
+{% endblock content %}
+
