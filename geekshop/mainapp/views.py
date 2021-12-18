@@ -16,7 +16,7 @@ content = {
     ],
     'main_menu': [
         {'href': 'index', 'name': 'домой'},
-        {'href': 'products', 'name': 'продукты'},
+        {'href': 'products:index', 'name': 'продукты'},
         {'href': 'contact', 'name': 'контакты'},
     ],
     'same_products': [
@@ -38,5 +38,7 @@ def contact(request):
     return render(request, 'mainapp/contact.html', content)
 
 
-def products(request):
-    return render(request, 'mainapp/products.html', content)
+def products(request, pk=None):
+    print(pk)
+    if pk == '':
+        return render(request, 'mainapp/products.html', content)

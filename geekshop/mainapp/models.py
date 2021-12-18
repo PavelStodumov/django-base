@@ -27,7 +27,7 @@ class Product(models.Model):
         blank=True)
     price = models.DecimalField(
         verbose_name='цена продукта',
-        max_digits=6,
+        max_digits=8,
         decimal_places=2,
         default=0)
     quantity = models.PositiveIntegerField(

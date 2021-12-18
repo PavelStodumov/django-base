@@ -1,0 +1,17 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block title %}{{main_title | title}}{% endblock title %}
+
+{% block menu %}
+	<div class="slider">
+	{% include 'mainapp/includes/inc_menu.html' %}
+{% endblock menu %}
+
+{% block content %}
+<div class="details">
+    <div class="links clearfix">
+        {% include 'mainapp/includes/inc_categories_menu.html' %}
+    </div>
+{% endblock %}
+</div>
