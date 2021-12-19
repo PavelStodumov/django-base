@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a66ff182-635c-4012-9fb3-3e5008bac72d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/geekshop/mainapp/templates/mainapp/category.html" beforeDir="false" afterPath="$PROJECT_DIR$/geekshop/mainapp/templates/mainapp/category.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geekshop/mainapp/templates/mainapp/includes/inc_same_products.html" beforeDir="false" afterPath="$PROJECT_DIR$/geekshop/mainapp/templates/mainapp/includes/inc_same_products.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geekshop/mainapp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/geekshop/mainapp/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/geekshop/geekshop/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/geekshop/geekshop/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/geekshop/geekshop/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/geekshop/geekshop/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/geekshop/mainapp/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/geekshop/mainapp/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/geekshop/mainapp/migrations/0002_product.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/geekshop/mainapp/migrations/0003_alter_product_price.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

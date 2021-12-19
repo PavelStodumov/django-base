@@ -28,8 +28,10 @@ urlpatterns = [
     path('contact/', mainapp_views.contact, name='contact'),
     path('products/', mainapp_views.products, name='products'),
     #path('products/', include('mainapp.urls', namespace='products')),
-    path('products/<int:pk>', mainapp_views.products, name='products'),
+    path('products/<int:pk>/', mainapp_views.products, name='products'),
     path('admin/', admin.site.urls),
+
+    path('auth/', include('authapp.urls', namespace='auth')),
 ]
 
 if settings.DEBUG:
