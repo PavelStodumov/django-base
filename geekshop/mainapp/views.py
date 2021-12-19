@@ -31,14 +31,16 @@ def products(request, pk=None):
 
     selected_category = ProductCategory.objects.filter(id=pk)
     categories = ProductCategory.objects.all()
-    products = [Product.objects.filter(category=selected_category)]
+    all_products = Product.objects.all()
+    products = Product.objects.filter(category_id=pk)
 
     content = {
         'title': 'Продукты',
         'main_menu': main_menu,
         'product_categories': categories,
         'products': products,
-        'selected_category': selected_category
+        'selected_category': selected_category,
+        'same_products': all_products[:3],
     }
     if pk:
         return render(request, 'mainapp/category.html', content)

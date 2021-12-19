@@ -1,7 +1,7 @@
 {% extends 'mainapp/base.html' %}
 {% load static %}
 
-{% block title %}{{ title | title }}{% endblock title %}
+{% block title %}{{ selected_category.0.name | title }}{% endblock title %}
 
 
 {% block menu %}
@@ -18,20 +18,22 @@
         
         <div class="details-products">
             <div class="details-slider">
-                <div class="slider-control">
+                <div class="tab-content">
                     
                     {% for product in products %}
-                        <div class="slider-control">
+                        <div class="block">
                             <a href="#"><img src="/media/{{ product.image }}" alt="">
-								<div class="text"></div>
+								<div class="text">
+                                    <h4>{{product.short_desc}}</h4>
+                                </div>
+
 							</a>
-                            {{ product.name }}
-                            {{selected_category}}
-                            {{product.category.name}}
+                            
 						</div>
+                        <p> {{product.description}}
                     {% endfor %}
 
-                </div>
+                    </div>
             </div>
         </div>
     </div>
