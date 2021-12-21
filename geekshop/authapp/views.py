@@ -28,3 +28,9 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse('index'))  # 'main'
+
+def register(request):
+    return HttpResponseRedirect(reverse('index'))
+    
+def edit(request):
+    return HttpResponseRedirect(reverse('index'))
