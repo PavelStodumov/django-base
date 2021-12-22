@@ -1079,3 +1079,9 @@ td:first-child {
 .errorlist {
 	color: red;
 }
+.user_avatar {
+	width: 80px;
+	height: 80px;
+	border-radius: 40px;
+	display: inline-block; 
+}

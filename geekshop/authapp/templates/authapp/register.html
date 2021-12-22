@@ -2,12 +2,14 @@
 {% load static %}
 
 {% block content %}
-<form class="form-horizontal" action="{% url 'auth:register' %}" method="post">
-    {% csrf_token %}
-    {{ register_form.as_p }}
-    <br>
-    <input class="form-control" type="submit" value="зарегестрироваться">    
-</form>
-
+    <form class="form-horizontal" action="{% url 'auth:register' %}" method="post">
+        {% csrf_token %}
+        {{ register_form.as_p }}
+        <br>
+        <input class="form-control" type="submit" value="зарегестрироваться">    
+    </form>
+    <button class="btn btn-round form-control">
+        <a href="{% url 'auth:register' %}" class="">Зарегестрироваться</a>
+    </button>
 {% endblock content %}
  
