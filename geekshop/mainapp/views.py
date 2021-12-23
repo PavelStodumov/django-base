@@ -29,15 +29,19 @@ def contact(request):
 
 def products(request, pk=None):
     category_all_products = {'name': 'все', 'id': 9999}
-    selected_category = ProductCategory.objects.filter(id=pk)
     categories = [category_all_products,
                   *ProductCategory.objects.all()]
     all_products = Product.objects.all()
-    if pk == 9999:
-        selected_category = category_all_products
-        products = Product.objects.all()
-    else:
-        products = Product.objects.filter(category_id=pk)
+    selected_category = ProductCategory.objects.filter(id=pk)
+    products = Product.objects.all()
+    # навоял какой-то костыль с id категории всех товаров. с id=0 не получается. открывается страница горячего предложения, почему - не понимаю. Думаю поставить id=1, а в модели, в поле id как-нибудь запретить присваивать единицу. Или посоветуйте как лучше сделать
+    if pk:
+        if pk == 9999:
+            selected_category = category_all_products
+            products = Product.objects.all()
+        else:
+            products = Product.objects.filter(category_id=pk)
+            selected_category = get_object_or_404(ProductCategory, id=pk)
 
     content = {
         'title': 'Продукты',
