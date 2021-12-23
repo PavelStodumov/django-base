@@ -9,7 +9,7 @@ JSON_PATH = 'mainapp/json'
 
 
 def load_from_json(file_name):
-    with open(os.path.join(JSON_PATH, file_name='.json'), r) as infile:
+    with open(os.path.join(JSON_PATH, file_name + '.json'), 'r', encoding='utf-8') as infile:
         return json.load(infile)
 
 
@@ -30,10 +30,10 @@ class Command(BaseCommand):
             # gполучаем категорию по имени
             _category = ProductCategory.objects.get(name=category_name)
             # заменяем название категории объектом
-            product[category] = _category
+            product['category'] = _category
             new_product = Product(**product)
             new_product.save()
 
-        # # Создадим суперпользователя при помощи менеджера модели
+        # Создадим суперпользователя при помощи менеджера модели
         # super_user = ShopUser.objects.create_superuser(
-        #     'admin', 'django@geekshop.local', 'admin', age=33)
+        #     'admin', 'django@geekshop.local', 'admin')

@@ -28,11 +28,16 @@ def contact(request):
 
 
 def products(request, pk=None):
-
+    category_all_products = {'name': 'все', 'id': 9999}
     selected_category = ProductCategory.objects.filter(id=pk)
-    categories = ProductCategory.objects.all()
+    categories = [category_all_products,
+                  *ProductCategory.objects.all()]
     all_products = Product.objects.all()
-    products = Product.objects.filter(category_id=pk)
+    if pk == 9999:
+        selected_category = category_all_products
+        products = Product.objects.all()
+    else:
+        products = Product.objects.filter(category_id=pk)
 
     content = {
         'title': 'Продукты',
