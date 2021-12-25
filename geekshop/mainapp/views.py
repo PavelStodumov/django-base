@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from .models import ProductCategory, Product
-
+from basketapp.models import Basket
 # Create your views here.
 
 main_menu = [
@@ -28,6 +28,11 @@ def contact(request):
 
 
 def products(request, pk=None):
+    
+    basket = []
+    if request.user.is_authenticated:
+        basket = Basket.objects.filter(user=request.user)
+    
     category_all_products = {'name': 'все', 'id': 9999}
     categories = [category_all_products,
                   *ProductCategory.objects.all()]
@@ -50,6 +55,7 @@ def products(request, pk=None):
         'products': products,
         'selected_category': selected_category,
         'same_products': all_products[:3],
+        'basket': basket,
     }
     if pk:
         return render(request, 'mainapp/category.html', content)
