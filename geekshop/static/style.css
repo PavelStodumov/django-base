@@ -90,6 +90,7 @@ html, body {
 	left: 1210px;
 }
 
+
 .clearfix:after {
 	content: "";
 	display: block;
@@ -1070,3 +1071,5 @@ td:first-child {
 .related-products a:hover .text{
 	display: block;
 }
+
+
