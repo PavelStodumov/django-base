@@ -7,7 +7,7 @@ import random
 
 main_menu = [
     {'href': 'index', 'name': 'домой'},
-    {'href': 'products', 'name': 'продукты'},
+    {'href': 'products:products_index', 'name': 'продукты'},
     {'href': 'contact', 'name': 'контакты'},
 ]
 
@@ -44,6 +44,48 @@ def contact(request):
         'main_menu': main_menu
     }
     return render(request, 'mainapp/contact.html', content)
+
+
+def products_index(request, pk=None):
+
+    basket = get_basket(request.user)
+
+    value_basket = sum(map(lambda b: b.value(), basket))
+    price_basket = sum(map(lambda b: b.price(), basket))
+
+    hot_product = get_hot_product()
+    same_products = get_same_products(hot_product)
+
+    category_all_products = {'name': 'все', 'id': 9999}
+    categories = [category_all_products,
+                  *ProductCategory.objects.all()]
+    all_products = Product.objects.all()
+    selected_category = ProductCategory.objects.filter(id=pk)
+    products = Product.objects.all()
+    if pk:
+        if pk == 9999:
+            selected_category = category_all_products
+            products = Product.objects.all()
+        else:
+            products = Product.objects.filter(category_id=pk)
+            selected_category = get_object_or_404(ProductCategory, id=pk)
+
+    content = {
+        'title': 'Продукты',
+        'main_menu': main_menu,
+        'product_categories': categories,
+        'products': products,
+        'selected_category': selected_category,
+        'hot_product': hot_product,
+        'same_products': same_products,
+        'basket': basket,
+        'value_basket': value_basket,
+        'price_basket': price_basket,
+    }
+
+    if pk:
+        return render(request, 'mainapp/category.html', content)
+    return render(request, 'mainapp/products.html', content)
 
 
 def products(request, pk=None):
