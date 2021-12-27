@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404, render
 from .models import ProductCategory, Product
 from basketapp.models import Basket
+
+import random
 # Create your views here.
 
 main_menu = [
@@ -8,6 +10,23 @@ main_menu = [
     {'href': 'products', 'name': 'продукты'},
     {'href': 'contact', 'name': 'контакты'},
 ]
+
+
+def get_basket(user):
+    if user.is_authenticated:
+        return Basket.objects.filter(user=user)
+    else:
+        return []
+
+
+def get_hot_product():
+    products = Product.objects.all()
+    return random.sample(list(products), 1)[0]
+
+
+def get_same_products(hot_product):
+    same_products = Product.objects.filter(category=hot_product.category)[:3]
+    return same_products
 
 
 def index(request):
@@ -29,11 +48,13 @@ def contact(request):
 
 def products(request, pk=None):
 
-    basket = []
-    if request.user.is_authenticated:
-        basket = Basket.objects.filter(user=request.user)
+    basket = get_basket(request.user)
+
     value_basket = sum(map(lambda b: b.value(), basket))
     price_basket = sum(map(lambda b: b.price(), basket))
+
+    hot_product = get_hot_product()
+    same_products = get_same_products(hot_product)
 
     category_all_products = {'name': 'все', 'id': 9999}
     categories = [category_all_products,
@@ -56,7 +77,8 @@ def products(request, pk=None):
         'product_categories': categories,
         'products': products,
         'selected_category': selected_category,
-        'same_products': all_products[:3],
+        'hot_product': hot_product,
+        'same_products': same_products,
         'basket': basket,
         'value_basket': value_basket,
         'price_basket': price_basket,
