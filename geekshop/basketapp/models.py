@@ -1,4 +1,4 @@
-from _typeshed import Self
+
 from django.db import models
 from django.conf import settings
 from mainapp.models import Product
@@ -12,3 +12,9 @@ class Basket(models.Model):
         verbose_name='количество', default=0)
     add_datetime = models.DateTimeField(
         verbose_name='время', auto_now_add=True)
+
+    def value(self):
+        return self.quantity
+
+    def price(self):
+        return self.product.price * self.quantity

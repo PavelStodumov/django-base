@@ -28,11 +28,13 @@ def contact(request):
 
 
 def products(request, pk=None):
-    
+
     basket = []
     if request.user.is_authenticated:
         basket = Basket.objects.filter(user=request.user)
-    
+    value_basket = sum(map(lambda b: b.value(), basket))
+    price_basket = sum(map(lambda b: b.price(), basket))
+
     category_all_products = {'name': 'все', 'id': 9999}
     categories = [category_all_products,
                   *ProductCategory.objects.all()]
@@ -56,6 +58,8 @@ def products(request, pk=None):
         'selected_category': selected_category,
         'same_products': all_products[:3],
         'basket': basket,
+        'value_basket': value_basket,
+        'price_basket': price_basket,
     }
     if pk:
         return render(request, 'mainapp/category.html', content)

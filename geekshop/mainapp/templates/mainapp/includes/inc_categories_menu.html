@@ -2,7 +2,7 @@
     {% for category in product_categories %}
         <li>
             <a href="{% url 'products' category.id %}" 
-               class="{% if request.resolver_match.url_name == link.href %}
+               class="{% if request.resolver_match.kwargs.pk == link.pk %}
                         active
                       {% endif %}">
                 {{ category.name }}

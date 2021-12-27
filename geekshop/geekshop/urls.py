@@ -29,7 +29,7 @@ urlpatterns = [
     path('products/', mainapp_views.products, name='products'),
 
     # не получается тут у меня вклинить диспетчер url. Посмотрите пожалуйста, что делаю не так.
-    #path('products/', include('mainapp.urls', namespace='products')),
+    # path('products/', include('mainapp.urls', namespace='products')),
 
     path('products/<int:pk>/', mainapp_views.products, name='products'),
     path('admin/', admin.site.urls),
