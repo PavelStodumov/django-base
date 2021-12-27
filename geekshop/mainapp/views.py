@@ -61,6 +61,7 @@ def products(request, pk=None):
         'value_basket': value_basket,
         'price_basket': price_basket,
     }
+
     if pk:
         return render(request, 'mainapp/category.html', content)
     return render(request, 'mainapp/products.html', content)
