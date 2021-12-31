@@ -10,6 +10,8 @@ main_menu = [
     {'href': 'products:products_index', 'name': 'продукты'},
     {'href': 'contact', 'name': 'контакты'},
 ]
+categories = [{'name': 'все', 'id': 9999},
+              *ProductCategory.objects.all()]
 
 
 def get_basket(user):
@@ -56,9 +58,6 @@ def products_index(request):
     hot_product = get_hot_product()
     same_products = get_same_products(hot_product)
 
-    category_all_products = {'name': 'все', 'id': 9999}
-    categories = [category_all_products,
-                  *ProductCategory.objects.all()]
     products = Product.objects.all()
 
     content = {
@@ -85,13 +84,11 @@ def products(request, pk=None):
     hot_product = get_hot_product()
     same_products = get_same_products(hot_product)
 
-    category_all_products = {'name': 'все', 'id': 9999}
-    categories = [category_all_products,
-                  *ProductCategory.objects.all()]
-    all_products = Product.objects.all()
     selected_category = ProductCategory.objects.filter(id=pk)
     products = Product.objects.all()
+
     # навоял какой-то костыль с id категории всех товаров. с id=0 не получается. открывается страница горячего предложения, почему - не понимаю. Думаю поставить id=1, а в модели, в поле id как-нибудь запретить присваивать единицу. Или посоветуйте как лучше сделать
+    category_all_products = {'name': 'все', 'id': 9999}
     if pk:
         if pk == 9999:
             selected_category = category_all_products
@@ -120,6 +117,7 @@ def product(request, pk):
     product = Product.objects.filter(id=pk)
 
     content = {
+        'product_categories': categories,
         'main_menu': main_menu,
         'title': product[0].name,
         'categories': ProductCategory.objects.all(),
