@@ -23,7 +23,7 @@
 					</div>
 					<div class="slider-control">
 						<div class="block">
-							<a href="#"><img src="/media/{{ hot_product.image }}" alt="">
+							<a href="{% url 'products:product' hot_product.id %}"><img src="/media/{{ hot_product.image }}" alt="">
 								<div class="text"></div>
 							</a>
 						</div>
@@ -44,7 +44,7 @@
 					<h3 class="big-bold">{{ hot_product.name }}</h3>
 					<h3 class="red">горячее предложение</h3>
 					<p class="price">{{ hot_product.price }}<span>руб</span></p>
-					<a href="{% url 'basket:add' hot_product.pk %}" class="red-button">
+					<a href="{% url 'basket:add' hot_product.id %}" class="red-button">
 						заказать <i class="fa fa-chevron-right" aria-hidden="true"></i>
 					</a>
 					<div class="description-text">

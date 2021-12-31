@@ -60,7 +60,7 @@ def products_index(request):
     categories = [category_all_products,
                   *ProductCategory.objects.all()]
     products = Product.objects.all()
-    
+
     content = {
         'title': 'Продукты',
         'main_menu': main_menu,
@@ -113,6 +113,18 @@ def products(request, pk=None):
         'price_basket': price_basket,
     }
 
-    if pk:
-        return render(request, 'mainapp/category.html', content)
-    return render(request, 'mainapp/products.html', content)
+    return render(request, 'mainapp/category.html', content)
+
+
+def product(request, pk):
+    product = Product.objects.filter(id=pk)
+
+    content = {
+        'main_menu': main_menu,
+        'title': product[0].name,
+        'categories': ProductCategory.objects.all(),
+        'product': product[0],
+        'basket': get_basket(request.user),
+    }
+
+    return render(request, 'mainapp/product.html', content)
