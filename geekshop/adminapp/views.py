@@ -1,7 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.models import User
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from authapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
 from django.contrib.auth.decorators import user_passes_test
+from django.urls import reverse
+from authapp.forms import ShopUserRegisterForm
+from adminapp.forms import ShopUserAdminEditForm, ProductCategoryEditForm
 # Create your views here.
 
 
@@ -16,15 +20,46 @@ def users(request):
 
 
 def user_create(request):
-    pass
+    title = 'пользователи/создание'
+
+    if request.method == 'POST':
+        user_form = ShopUserRegisterForm(request.POST, request.FILES)
+        if user_form.is_valid:
+            user_form.save()
+            return HttpResponseRedirect(reverse('admin:users'))
+    else:
+        user_form = ShopUserRegisterForm()
+
+    content = {'title': title, 'update_form': user_form}
+    return render(request, 'adminapp/user_update.html', content)
 
 
 def user_update(request, pk):
-    pass
+    title = 'пользаватели/редактирование'
+    edit_user = get_object_or_404(ShopUser, pk=pk)
+    if request.method == 'POST':
+        edit_form = ShopUserAdminEditForm(
+            request.POST, request.FILES, instance=edit_user)
+        if edit_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse('admin:user_update', args=[edit_user.pk]))
+    else:
+        edit_form = ShopUserAdminEditForm(instance=edit_user)
+
+    content = {'title': title, 'update_form': edit_form}
+    return render(request, 'adminapp/user_update.html', content)
 
 
 def user_delete(request, pk):
-    pass
+    title = 'пользователи/удаление'
+    user = get_object_or_404(ShopUser, pk=pk)
+    if request.method == 'POST':
+        user.is_active = False
+        user.save()
+        return HttpResponseRedirect(reverse('admin:users'))
+
+    content = {'title': title, 'user_to_delete': user}
+    return render(request, 'adminapp/user_delete.html', content)
 
 
 def categories(request):
@@ -36,15 +71,42 @@ def categories(request):
 
 
 def category_create(request):
-    pass
+    title = 'создание категории'
+
+    if request.method == 'POST':
+        category_form = ProductCategoryEditForm(request.POST, request.FILES)
+        if category_form.is_valid:
+            category_form.save()
+            return HttpResponseRedirect(reverse('admin:categories'))
+    else:
+        category_form = ProductCategoryEditForm()
+    content = {'title': title, 'update_form': category_form}
+    return render(request, 'adminapp/create_category.html', content)
 
 
 def category_update(request, pk):
-    pass
+    title = 'редактирование категории'
+    edit_category = get_object_or_404(ProductCategory, pk=pk)
+    if request.method == 'POST':
+        edit_form = ProductCategoryEditForm(
+            request.POST, request.FILES, instance=edit_category)
+        if edit_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse('admin:categories'))
+    else:
+        edit_form = ProductCategoryEditForm(instance=edit_category)
+    content = {'title': title, 'update_form': edit_form}
+    return render(request, 'adminapp/create_category.html', content)
 
 
 def category_delete(request, pk):
-    pass
+    title = 'удаление категории'
+    category = get_object_or_404(ProductCategory, pk=pk)
+    if request.method == 'POST':
+        category.delete()
+        return HttpResponseRedirect(reverse('admin:categories'))
+    content = {'title': title, 'category_to_delete': category}
+    return render(request, 'adminapp/delete_category.html', content)
 
 
 def products(request, pk):
