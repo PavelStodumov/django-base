@@ -33,23 +33,15 @@
                 <li>
                     <span>
                         {% if user.is_authenticated %}
-                        Товаров:{{ value_basket }}<br>
-                        На сумму: {{ price_basket }}руб.
+                        Товаров:{{ basket.0.total_quantity }}<br>
+                        На сумму: {{ basket.0.total_cost|floatformat:0 }}руб.
                         {% endif %}
                     </span>
                 </li>
             
         </ul>
         <a href="#" class="search"></a>
-        <a href="{% url 'basket:view' %}" class="basket"><br>
-            <span>
-                {% if basket %} 
-                  {{ basket.0.total_cost|floatformat:0 }} руб 
-                  ({{ basket.0.total_quantity }} шт)
-                {% endif %}
-              </span>
-            
-        </a>
+        <a href="{% url 'basket:view' %}" class="basket"></a>
         
     </div>
     
