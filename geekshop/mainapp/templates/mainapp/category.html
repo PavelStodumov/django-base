@@ -22,6 +22,22 @@
         <h2>
           Категория: "{{ selected_category.name|title }}"
         </h2>
+        <div class="paginator">
+            {% if products.has_previous %}
+                <a href="{% url 'products:page' selected_category.id products.previous_page_number %}">
+                <
+                </a>
+            {% endif %}
+            <span class="current">
+                страница {{ products.number }} из {{ products.paginator.num_pages }}
+            </span>
+            {% if products.has_next %}
+                <a href="{% url 'products:page' selected_category.id products.next_page_number %}">
+                >
+                </a>
+            {% endif %}
+            
+        </div>
       </div><br>
       <div class="category-products clearfix">
 

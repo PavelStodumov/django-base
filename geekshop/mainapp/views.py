@@ -3,6 +3,8 @@ from .models import ProductCategory, Product
 from basketapp.models import Basket
 
 import random
+
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 # Create your views here.
 
 main_menu = [
@@ -71,7 +73,7 @@ def products_index(request):
     return render(request, 'mainapp/products.html', content)
 
 
-def products(request, pk=None):
+def products(request, pk=None, page=1):
 
     basket = get_basket(request.user)
 
@@ -88,18 +90,26 @@ def products(request, pk=None):
         else:
             products = Product.objects.filter(category_id=pk)
             selected_category = get_object_or_404(ProductCategory, id=pk)
+            
+        paginator = Paginator(products, 2)
+        try:
+            products_paginator = paginator.page(page)
+        except PageNotAnInteger:
+            products_paginator = paginator.page(1)
+        except EmptyPage:
+            products_paginator = paginator.page(paginator.num_pages)
 
     content = {
         'title': 'Продукты',
         'main_menu': main_menu,
         'product_categories': categories,
-        'products': products,
+        'products': products_paginator,
         'selected_category': selected_category,
         'hot_product': hot_product,
         'same_products': same_products,
         'basket': basket,
     }
-
+    
     return render(request, 'mainapp/category.html', content)
 
 
