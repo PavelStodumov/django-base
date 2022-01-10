@@ -1,23 +1,50 @@
-import pdb
+from django.views.generic.list import ListView
+from  django.views.generic.edit import CreateView, UpdateView, DeleteView
+from  django.utils.decorators import method_decorator
+
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from authapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
 from django.contrib.auth.decorators import user_passes_test
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from authapp.forms import ShopUserRegisterForm
 from adminapp.forms import ShopUserAdminEditForm, ProductCategoryEditForm, ProductEditForm
 # Create your views here.
 
+class UsersListView(ListView):
+    model = ShopUser
+    template_name = 'adminapp/users.html'
+    
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
+#@user_passes_test(lambda u: u.is_superuser)
+#def users(request):
+#    title = 'админка/пользователи'
+#    users_list = ShopUser.objects.all().order_by(
+#        '-is_active', '-is_superuser', '-is_staff', 'username')
 
-@user_passes_test(lambda u: u.is_superuser)
-def users(request):
-    title = 'админка/пользователи'
-    users_list = ShopUser.objects.all().order_by(
-        '-is_active', '-is_superuser', '-is_staff', 'username')
+#    content = {'title': title, 'objects': users_list}
+#    return render(request, 'adminapp/users.html', content)
 
-    content = {'title': title, 'objects': users_list}
-    return render(request, 'adminapp/users.html', content)
+class ProductCategoryCreateView(CreateView):
+    model = ProductCategory
+    template_name = 'adminapp/create_category.html'
+    success_url = reverse_lazy('admin:categories')
+    fields = '__all__'
+    
+class ProductCategoryUpdateView(UpdateView):
+    model = ProductCategory
+    template_name = 'adminapp/create_category.html'
+    success_url = reverse_lazy('admin:categories')
+    fields = '__all__'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'категории/редактирование'
+        return context
 
 
 def user_create(request):
