@@ -11,6 +11,11 @@ class ShopUserAdminEditForm(ShopUserEditForm):
         model = ShopUser
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f_name, f in self.fields.items():
+            f.widget.attrs['class'] = 'form-control'
+
 
 class ProductCategoryEditForm(forms.ModelForm):
     class Meta:

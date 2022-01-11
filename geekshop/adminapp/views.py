@@ -1,6 +1,9 @@
+from django import template
+from django.db.models import fields
 from django.views.generic.list import ListView
-from  django.views.generic.edit import CreateView, UpdateView, DeleteView
-from  django.utils.decorators import method_decorator
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.detail import DetailView
+from django.utils.decorators import method_decorator
 
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
@@ -12,39 +15,57 @@ from authapp.forms import ShopUserRegisterForm
 from adminapp.forms import ShopUserAdminEditForm, ProductCategoryEditForm, ProductEditForm
 # Create your views here.
 
+
 class UsersListView(ListView):
     model = ShopUser
     template_name = 'adminapp/users.html'
-    
+
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
-    
-#@user_passes_test(lambda u: u.is_superuser)
-#def users(request):
-#    title = 'админка/пользователи'
-#    users_list = ShopUser.objects.all().order_by(
-#        '-is_active', '-is_superuser', '-is_staff', 'username')
 
-#    content = {'title': title, 'objects': users_list}
-#    return render(request, 'adminapp/users.html', content)
+
+class UserCreateView(CreateView):
+    model = ShopUser
+    template_name = 'adminapp/user_update.html'
+    success_url = reverse_lazy('admin:users')
+    fields = ['username', 'first_name', 'password', 'email', 'avatar']
+
 
 class ProductCategoryCreateView(CreateView):
     model = ProductCategory
     template_name = 'adminapp/create_category.html'
     success_url = reverse_lazy('admin:categories')
     fields = '__all__'
-    
+
+
 class ProductCategoryUpdateView(UpdateView):
     model = ProductCategory
     template_name = 'adminapp/create_category.html'
     success_url = reverse_lazy('admin:categories')
     fields = '__all__'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'категории/редактирование'
         return context
+
+
+class ProductCategoryDeleteView(DeleteView):
+    model = ProductCategory
+    template_name = 'adminapp/delete_category.html'
+    success_url = reverse_lazy('admin:categories')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+
+        return HttpResponseRedirect(self.success_url)
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'adminapp/product_read.html'
 
 
 def user_create(request):
@@ -96,45 +117,6 @@ def categories(request):
 
     content = {'title': title, 'objects': categories_list}
     return render(request, 'adminapp/categories.html', content)
-
-
-def category_create(request):
-    title = 'создание категории'
-
-    if request.method == 'POST':
-        category_form = ProductCategoryEditForm(request.POST, request.FILES)
-        if category_form.is_valid:
-            category_form.save()
-            return HttpResponseRedirect(reverse('admin:categories'))
-    else:
-        category_form = ProductCategoryEditForm()
-    content = {'title': title, 'update_form': category_form}
-    return render(request, 'adminapp/create_category.html', content)
-
-
-def category_update(request, pk):
-    title = 'редактирование категории'
-    edit_category = get_object_or_404(ProductCategory, pk=pk)
-    if request.method == 'POST':
-        edit_form = ProductCategoryEditForm(
-            request.POST, request.FILES, instance=edit_category)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse('admin:categories'))
-    else:
-        edit_form = ProductCategoryEditForm(instance=edit_category)
-    content = {'title': title, 'update_form': edit_form}
-    return render(request, 'adminapp/create_category.html', content)
-
-
-def category_delete(request, pk):
-    title = 'удаление категории'
-    category = get_object_or_404(ProductCategory, pk=pk)
-    if request.method == 'POST':
-        category.delete()
-        return HttpResponseRedirect(reverse('admin:categories'))
-    content = {'title': title, 'category_to_delete': category}
-    return render(request, 'adminapp/delete_category.html', content)
 
 
 def products(request, pk):
