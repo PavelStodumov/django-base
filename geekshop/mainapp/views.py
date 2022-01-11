@@ -3,6 +3,8 @@ from .models import ProductCategory, Product
 from basketapp.models import Basket
 
 import random
+
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 # Create your views here.
 
 main_menu = [
@@ -10,7 +12,7 @@ main_menu = [
     {'href': 'products:products_index', 'name': 'продукты'},
     {'href': 'contact', 'name': 'контакты'},
 ]
-categories = [{'name': 'все', 'id': 9999},
+categories = [{'name': 'все', 'id': 0},
               *ProductCategory.objects.all()]
 
 
@@ -35,7 +37,8 @@ def index(request):
     content = {
         'title': 'главная',
         'main_menu': main_menu,
-        'products': Product.objects.all()[:2]
+        'products': Product.objects.all()[:2],
+        'basket': get_basket(request.user)
     }
     return render(request, 'mainapp/index.html', content)
 
@@ -43,7 +46,8 @@ def index(request):
 def contact(request):
     content = {
         'title': 'контакты',
-        'main_menu': main_menu
+        'main_menu': main_menu,
+        'basket': get_basket(request.user)
     }
     return render(request, 'mainapp/contact.html', content)
 
@@ -52,9 +56,6 @@ def products_index(request):
 
     basket = get_basket(request.user)
 
-    value_basket = sum(map(lambda b: b.value(), basket))
-    price_basket = sum(map(lambda b: b.price(), basket))
-
     hot_product = get_hot_product()
     same_products = get_same_products(hot_product)
 
@@ -68,18 +69,13 @@ def products_index(request):
         'hot_product': hot_product,
         'same_products': same_products,
         'basket': basket,
-        'value_basket': value_basket,
-        'price_basket': price_basket,
     }
     return render(request, 'mainapp/products.html', content)
 
 
-def products(request, pk=None):
+def products(request, pk=None, page=1):
 
     basket = get_basket(request.user)
-
-    value_basket = sum(map(lambda b: b.value(), basket))
-    price_basket = sum(map(lambda b: b.price(), basket))
 
     hot_product = get_hot_product()
     same_products = get_same_products(hot_product)
@@ -87,29 +83,33 @@ def products(request, pk=None):
     selected_category = ProductCategory.objects.filter(id=pk)
     products = Product.objects.all()
 
-    # навоял какой-то костыль с id категории всех товаров. с id=0 не получается. открывается страница горячего предложения, почему - не понимаю. Думаю поставить id=1, а в модели, в поле id как-нибудь запретить присваивать единицу. Или посоветуйте как лучше сделать
-    category_all_products = {'name': 'все', 'id': 9999}
-    if pk:
-        if pk == 9999:
-            selected_category = category_all_products
+    if pk is not None:
+        if pk == 0:
+            selected_category = categories[pk]
             products = Product.objects.all()
         else:
             products = Product.objects.filter(category_id=pk)
             selected_category = get_object_or_404(ProductCategory, id=pk)
+            
+        paginator = Paginator(products, 2)
+        try:
+            products_paginator = paginator.page(page)
+        except PageNotAnInteger:
+            products_paginator = paginator.page(1)
+        except EmptyPage:
+            products_paginator = paginator.page(paginator.num_pages)
 
     content = {
         'title': 'Продукты',
         'main_menu': main_menu,
         'product_categories': categories,
-        'products': products,
+        'products': products_paginator,
         'selected_category': selected_category,
         'hot_product': hot_product,
         'same_products': same_products,
         'basket': basket,
-        'value_basket': value_basket,
-        'price_basket': price_basket,
     }
-
+    
     return render(request, 'mainapp/category.html', content)
 
 
