@@ -25,9 +25,9 @@ from django.conf.urls import include
 
 urlpatterns = [
     path('', mainapp_views.index, name='index'),
-    path('contact/', mainapp_views.contact, name='contact'),   
+    path('contact/', mainapp_views.contact, name='contact'),
     path('products/', include('mainapp.urls', namespace='products')),
-    path('admin/', admin.site.urls),
+    path('admin/', include('adminapp.urls', namespace='admin')),
     path('auth/', include('authapp.urls', namespace='auth')),
     path('basket/', include('basketapp.urls', namespace='basket'))
 ]
