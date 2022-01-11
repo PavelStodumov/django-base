@@ -1,13 +1,34 @@
 from django.shortcuts import get_object_or_404, render
 from .models import ProductCategory, Product
 from basketapp.models import Basket
+
+import random
 # Create your views here.
 
 main_menu = [
     {'href': 'index', 'name': 'домой'},
-    {'href': 'products', 'name': 'продукты'},
+    {'href': 'products:products_index', 'name': 'продукты'},
     {'href': 'contact', 'name': 'контакты'},
 ]
+categories = [{'name': 'все', 'id': 9999},
+              *ProductCategory.objects.all()]
+
+
+def get_basket(user):
+    if user.is_authenticated:
+        return Basket.objects.filter(user=user)
+    else:
+        return []
+
+
+def get_hot_product():
+    products = Product.objects.all()
+    return random.sample(list(products), 1)[0]
+
+
+def get_same_products(hot_product):
+    same_products = Product.objects.filter(category=hot_product.category)[:3]
+    return same_products
 
 
 def index(request):
@@ -27,21 +48,47 @@ def contact(request):
     return render(request, 'mainapp/contact.html', content)
 
 
-def products(request, pk=None):
+def products_index(request):
 
-    basket = []
-    if request.user.is_authenticated:
-        basket = Basket.objects.filter(user=request.user)
+    basket = get_basket(request.user)
+
     value_basket = sum(map(lambda b: b.value(), basket))
     price_basket = sum(map(lambda b: b.price(), basket))
 
-    category_all_products = {'name': 'все', 'id': 9999}
-    categories = [category_all_products,
-                  *ProductCategory.objects.all()]
-    all_products = Product.objects.all()
+    hot_product = get_hot_product()
+    same_products = get_same_products(hot_product)
+
+    products = Product.objects.all()
+
+    content = {
+        'title': 'Продукты',
+        'main_menu': main_menu,
+        'product_categories': categories,
+        'products': products,
+        'hot_product': hot_product,
+        'same_products': same_products,
+        'basket': basket,
+        'value_basket': value_basket,
+        'price_basket': price_basket,
+    }
+    return render(request, 'mainapp/products.html', content)
+
+
+def products(request, pk=None):
+
+    basket = get_basket(request.user)
+
+    value_basket = sum(map(lambda b: b.value(), basket))
+    price_basket = sum(map(lambda b: b.price(), basket))
+
+    hot_product = get_hot_product()
+    same_products = get_same_products(hot_product)
+
     selected_category = ProductCategory.objects.filter(id=pk)
     products = Product.objects.all()
+
     # навоял какой-то костыль с id категории всех товаров. с id=0 не получается. открывается страница горячего предложения, почему - не понимаю. Думаю поставить id=1, а в модели, в поле id как-нибудь запретить присваивать единицу. Или посоветуйте как лучше сделать
+    category_all_products = {'name': 'все', 'id': 9999}
     if pk:
         if pk == 9999:
             selected_category = category_all_products
@@ -56,12 +103,26 @@ def products(request, pk=None):
         'product_categories': categories,
         'products': products,
         'selected_category': selected_category,
-        'same_products': all_products[:3],
+        'hot_product': hot_product,
+        'same_products': same_products,
         'basket': basket,
         'value_basket': value_basket,
         'price_basket': price_basket,
     }
 
-    if pk:
-        return render(request, 'mainapp/category.html', content)
-    return render(request, 'mainapp/products.html', content)
+    return render(request, 'mainapp/category.html', content)
+
+
+def product(request, pk):
+    product = Product.objects.filter(id=pk)
+
+    content = {
+        'product_categories': categories,
+        'main_menu': main_menu,
+        'title': product[0].name,
+        'categories': ProductCategory.objects.all(),
+        'product': product[0],
+        'basket': get_basket(request.user),
+    }
+
+    return render(request, 'mainapp/product.html', content)
