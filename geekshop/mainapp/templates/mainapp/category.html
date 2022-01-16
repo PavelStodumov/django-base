@@ -36,7 +36,7 @@
                 <h2>{{ product.name|title }}</h2>
                 <h3>Цена: {{ product.price }}</h3>
                 <p>{{ product.description }}</p>
-                <a href="{% url 'products:product' product.pk %}">
+                <a href="{% url 'products:product' product.pk %}">Подробнее
                   <img src="{% static 'img/icon-hover.png' %}" alt="hover">
                 </a>
             </div>
