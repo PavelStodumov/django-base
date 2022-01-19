@@ -24,8 +24,8 @@ class ShopUser(AbstractUser):
 
 class ShopUserProfile(models.Model):
     MALE = 'M'
-    FEEMALE = 'W'
-    GENDER_CHOICES = ((MALE, 'М'), (FEEMALE, 'Ж'))
+    FEMALE = 'W'
+    GENDER_CHOICES = ((MALE, 'М'), (FEMALE, 'Ж'))
     user = models.OneToOneField(
         ShopUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE, related_name='profile')
     tagline = models.CharField(verbose_name='Теги', max_length=128, blank=True)

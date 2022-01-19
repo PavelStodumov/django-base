@@ -1118,3 +1118,12 @@ td:first-child {
 	box-shadow: none;
 	background-color: #d41306;
 }
+
+.vk_icon {
+	display: block;
+    width: 23px;
+    height: 23px;
+    position: absolute;
+    top: 57px;
+    left: 1240px;
+}
