@@ -27,12 +27,14 @@ class ShopUserProfile(models.Model):
     FEEMALE = 'W'
     GENDER_CHOICES = ((MALE, 'М'), (FEEMALE, 'Ж'))
     user = models.OneToOneField(
-        ShopUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
+        ShopUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE, related_name='profile')
     tagline = models.CharField(verbose_name='Теги', max_length=128, blank=True)
     about_me = models.TextField(
         verbose_name='О себе', max_length=512, blank=True)
     gender = models.CharField(
         verbose_name='Пол', max_length=1, choices=GENDER_CHOICES, blank=True)
+    social_sites = models.URLField(
+        verbose_name='Соц.Сети', max_length=128, blank=True)
 
     @receiver(post_save, sender=ShopUser)
     def create_user_profile(sender, instance, created, **kwargs):
@@ -41,4 +43,4 @@ class ShopUserProfile(models.Model):
 
     @receiver(post_save, sender=ShopUser)
     def save_user_profile(sender, instance, **kwargs):
-        instance.shopuserprofile.save()
+        instance.profile.save()
