@@ -24,6 +24,9 @@ from django.conf.urls import include
 
 
 urlpatterns = [
+
+    path('', include('social_django.urls', namespace='social')),
+
     path('', mainapp_views.index, name='index'),
     path('contact/', mainapp_views.contact, name='contact'),
     path('products/', include('mainapp.urls', namespace='products')),
