@@ -18,6 +18,7 @@ from adminapp.forms import ShopUserAdminEditForm, ProductCategoryEditForm, Produ
 
 class UsersListView(ListView):
     model = ShopUser
+    fields = '__all__'
     template_name = 'adminapp/users.html'
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
@@ -25,11 +26,11 @@ class UsersListView(ListView):
         return super().dispatch(*args, **kwargs)
 
 
-class UserCreateView(CreateView):
-    model = ShopUser
-    template_name = 'adminapp/user_update.html'
-    success_url = reverse_lazy('admin:users')
-    fields = ['username', 'first_name', 'password', 'email', 'avatar']
+# class UserCreateView(CreateView):
+#     model = ShopUser
+#     template_name = 'adminapp/user_update.html'
+#     success_url = reverse_lazy('admin:users')
+#     fields = ['username', 'first_name', 'password', 'email', 'avatar']
 
 
 class ProductCategoryCreateView(CreateView):
@@ -74,12 +75,16 @@ def user_create(request):
     if request.method == 'POST':
         user_form = ShopUserRegisterForm(request.POST, request.FILES)
         if user_form.is_valid:
-            user_form.save()
-            return HttpResponseRedirect(reverse('admin:users'))
+            try:
+                user_form.save()
+                return HttpResponseRedirect(reverse('admin:users'))
+            except:
+                user_form = ShopUserRegisterForm(request.POST, request.FILES)
+
     else:
         user_form = ShopUserRegisterForm()
 
-    content = {'title': title, 'update_form': user_form}
+    content = {'title': title, 'form': user_form}
     return render(request, 'adminapp/user_update.html', content)
 
 
@@ -95,7 +100,7 @@ def user_update(request, pk):
     else:
         edit_form = ShopUserAdminEditForm(instance=edit_user)
 
-    content = {'title': title, 'update_form': edit_form}
+    content = {'title': title, 'form': edit_form}
     return render(request, 'adminapp/user_update.html', content)
 
 

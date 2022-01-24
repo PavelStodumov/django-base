@@ -1,7 +1,5 @@
 from django.shortcuts import get_object_or_404, render
 from .models import ProductCategory, Product
-from basketapp.models import Basket
-
 import random
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -14,13 +12,6 @@ main_menu = [
 ]
 categories = [{'name': 'все', 'id': 0},
               *ProductCategory.objects.all()]
-
-
-def get_basket(user):
-    if user.is_authenticated:
-        return Basket.objects.filter(user=user)
-    else:
-        return []
 
 
 def get_hot_product():
@@ -38,7 +29,6 @@ def index(request):
         'title': 'главная',
         'main_menu': main_menu,
         'products': Product.objects.all()[:2],
-        'basket': get_basket(request.user)
     }
     return render(request, 'mainapp/index.html', content)
 
@@ -47,20 +37,14 @@ def contact(request):
     content = {
         'title': 'контакты',
         'main_menu': main_menu,
-        'basket': get_basket(request.user)
     }
     return render(request, 'mainapp/contact.html', content)
 
 
 def products_index(request):
-
-    basket = get_basket(request.user)
-
     hot_product = get_hot_product()
     same_products = get_same_products(hot_product)
-
     products = Product.objects.all()
-
     content = {
         'title': 'Продукты',
         'main_menu': main_menu,
@@ -68,15 +52,12 @@ def products_index(request):
         'products': products,
         'hot_product': hot_product,
         'same_products': same_products,
-        'basket': basket,
+        # 'basket': basket,
     }
     return render(request, 'mainapp/products.html', content)
 
 
 def products(request, pk=None, page=1):
-
-    basket = get_basket(request.user)
-
     hot_product = get_hot_product()
     same_products = get_same_products(hot_product)
 
@@ -90,7 +71,7 @@ def products(request, pk=None, page=1):
         else:
             products = Product.objects.filter(category_id=pk)
             selected_category = get_object_or_404(ProductCategory, id=pk)
-            
+
         paginator = Paginator(products, 2)
         try:
             products_paginator = paginator.page(page)
@@ -107,9 +88,8 @@ def products(request, pk=None, page=1):
         'selected_category': selected_category,
         'hot_product': hot_product,
         'same_products': same_products,
-        'basket': basket,
     }
-    
+
     return render(request, 'mainapp/category.html', content)
 
 
@@ -122,7 +102,6 @@ def product(request, pk):
         'title': product[0].name,
         'categories': ProductCategory.objects.all(),
         'product': product[0],
-        'basket': get_basket(request.user),
     }
 
     return render(request, 'mainapp/product.html', content)
