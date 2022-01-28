@@ -1,4 +1,4 @@
-
+from itertools import product
 from django.db import models
 from django.conf import settings
 from mainapp.models import Product
@@ -35,3 +35,18 @@ class Basket(models.Model):
     @classmethod
     def get_items(self, user):
         return Basket.objects.filter(user=user)
+
+    def delete(self, *args, **kwargs):
+        self.product.quantity += self.quantity
+        self.product.save()
+        super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            basket_items = Basket.objects.get(pk=self.pk)
+            self.product.quantity -= self.quantity - basket_items.quantity
+        else:
+            self.product.quantity -= self.quantity
+
+        self.product.save()
+        super().save(*args, **kwargs)
