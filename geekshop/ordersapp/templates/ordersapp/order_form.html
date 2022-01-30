@@ -30,13 +30,21 @@
                                     {% endfor %}
                                 {% endif %}
                                 {{ field.errors.as_ul }}
-                                {% if field.name != 'price' %}
+                                {% if field.name != 'price' and field.name != 'summ' %}
                                     {{ field }}
                                 {% else %}
-                                    {% if field.value %}
-                                        <span class="orderitems-{{forloop.parentloop.counter0}}-price">
+                                    {% if field.name == 'price' %}
+                                        {% if field.value %}
+                                            <span class="orderitems-{{forloop.parentloop.counter0}}-price">
+                                                {{ field.value }}
+                                            </span> руб
+                                        {% endif %}
+                                    {% else %}
+                                        {% if field.value %}
+                                        <span class="orderitems-{{forloop.parentloop.counter0}}-summ">
                                             {{ field.value }}
                                         </span> руб
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
 

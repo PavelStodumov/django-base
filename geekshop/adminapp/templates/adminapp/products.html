@@ -39,6 +39,8 @@
           <p>{{ object.price }} руб</p>
           <b>количество</b>
           <p>{{ object.quantity }}</p>
+          <b>в каталоге</b>
+          <p>{% if object.is_active %}да{% else %}нет{% endif %}</p>
         </div>
         <div class="product_desc">
           {{ object.short_desc|title }}
