@@ -13,12 +13,6 @@ class Basket(models.Model):
     add_datetime = models.DateTimeField(
         verbose_name='время', auto_now_add=True)
 
-    def value(self):
-        return self.quantity
-
-    def price(self):
-        return self.product.price * self.quantity
-
     @property
     def product_cost(self):
         "return cost of all products this type"
@@ -37,3 +31,7 @@ class Basket(models.Model):
         _items = Basket.objects.filter(user=self.user)
         _totalcost = sum(list(map(lambda x: x.product_cost, _items)))
         return _totalcost
+
+    @classmethod
+    def get_items(self, user):
+        return Basket.objects.filter(user=user)

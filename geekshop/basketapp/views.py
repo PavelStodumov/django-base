@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-# Create your views here.
 
 
 @login_required

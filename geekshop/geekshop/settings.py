@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'authapp',
     'basketapp',
     'adminapp',
+    'ordersapp',
 ]
 
 MIDDLEWARE = [
@@ -172,8 +173,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    # os.path.join(BASE_DIR, 'static'), по-старому
     BASE_DIR / 'static',
+    BASE_DIR / 'static/css',
 )
 
 # Media files
