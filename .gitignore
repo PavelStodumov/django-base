@@ -402,3 +402,4 @@ FodyWeavers.xsd
 geekshop/vk.json
 geekshop/db.sqlite3
 .gitignore
+geekshop/db.json
