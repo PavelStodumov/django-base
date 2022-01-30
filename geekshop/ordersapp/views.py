@@ -9,6 +9,8 @@ from ordersapp.models import Order, OrderItem
 from ordersapp.forms import OrderItemForm
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, pre_delete
+from django.http import JsonResponse
+from mainapp.models import Product
 
 
 class OrderList(ListView):
@@ -40,7 +42,8 @@ class OrderItemsCreate(CreateView):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
                     form.initial['price'] = basket_items[num].product.price
-                # basket_items.delete()
+                    form.initial['summ'] = basket_items[num].product.price * \
+                        basket_items[num].quantity
             else:
                 formset = OrderFormSet()
 
@@ -85,6 +88,8 @@ class OrderItemsUpdate(UpdateView):
             for form in formset.forms:
                 if form.instance.pk:
                     form.initial['price'] = form.instance.product.price
+                    form.initial['summ'] = form.instance.product.price * \
+                        form.instance.quantity
             data['orderitems'] = formset
         return data
 
@@ -146,3 +151,11 @@ def product_quantity_update_save(sender, update_fields, instance, **kwargs):
 def product_quantity_update_delete(sender, instance, **kwargs):
     instance.product.quantity += instance.quantity
     instance.product.save()
+
+
+def get_product_price(request, pk):
+    product = Product.objects.filter(pk=int(pk)).first()
+    if product:
+        return JsonResponse({'price': product.price})
+    else:
+        return JsonResponse({'price': 0})

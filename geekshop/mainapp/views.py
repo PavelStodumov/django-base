@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from .models import ProductCategory, Product
 import random
+from django.http import JsonResponse
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 # Create your views here.
